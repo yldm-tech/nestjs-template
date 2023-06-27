@@ -63,6 +63,6 @@ jobs:
         run: |
           cd uture-ai-manifests
           git config --global user.name "Bot Powered by Evan Hu"
-          git config --global user.email "evan@uture.ai"
+          git config --global user.email "evan@yldm.tech"
           git commit -am "Update yueling-box-server prod image version to $IMAGE_TAG"
           git push

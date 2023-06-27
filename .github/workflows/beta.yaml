@@ -46,7 +46,7 @@ jobs:
         uses: actions/checkout@v3
         with:
           repository: uture-ai/uture-ai-manifests
-          token: ${{ secrets.UTURE_GITHUB_ACCESS_TOKEN }}
+          token: ${{ secrets.YLDM_GITHUB_ACCESS_TOKEN }}
           path: uture-ai-manifests
 
       - name: Update image version in deployment.yaml
@@ -63,6 +63,6 @@ jobs:
         run: |
           cd uture-ai-manifests
           git config --global user.name "Bot Powered by Evan Hu"
-          git config --global user.email "evan@uture.ai"
+          git config --global user.email "evan@yldm.tech"
           git commit -am "Update yueling-box-server beta image version to $IMAGE_TAG"
           git push
