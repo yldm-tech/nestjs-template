@@ -35,7 +35,7 @@ jobs:
         id: build-image
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: yueling-box-server
+          ECR_REPOSITORY: yldm-box-server
           IMAGE_TAG: v${{ steps.get_version.outputs.VERSION }}-beta
         run: |
           docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg environment=stg .
@@ -52,7 +52,7 @@ jobs:
       - name: Update image version in deployment.yaml
         env:
           ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
-          ECR_REPOSITORY: yueling-box-server
+          ECR_REPOSITORY: yldm-box-server
           IMAGE_TAG: v${{ steps.get_version.outputs.VERSION }}-beta
         run: |
           sed -i "s|image: .*$|image: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|" uture-ai-manifests/microservices/api-uture-ai/overlays/beta/deployment.yaml
@@ -64,5 +64,5 @@ jobs:
           cd uture-ai-manifests
           git config --global user.name "Bot Powered by Evan Hu"
           git config --global user.email "evan@yldm.tech"
-          git commit -am "Update yueling-box-server beta image version to $IMAGE_TAG"
+          git commit -am "Update yldm-box-server beta image version to $IMAGE_TAG"
           git push
