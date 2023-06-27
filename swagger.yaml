@@ -6,6 +6,12 @@ paths:
       summary: Create cat
       parameters: []
       responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
         '403':
           description: Forbidden.
       security:
