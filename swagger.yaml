@@ -12,7 +12,7 @@ paths:
         - AccessToken: []
         - Authorization: []
 info:
-  title: yueling-box-server
+  title: yldm-box-server
   description: ''
   version: 0.0.1
   contact: {}
