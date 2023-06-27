@@ -14,7 +14,7 @@ import * as compression from 'compression';
 import * as yaml from 'js-yaml';
 import helmet from 'helmet';
 import * as csurf from 'csurf';
-import { AppModule } from './app/app.module';
+import { AppModule } from './app.module';
 import { PrismaClientExceptionFilter } from './utils/filter/prisma-client-exception_filter';
 import { description, name, version } from './../package.json';
 
