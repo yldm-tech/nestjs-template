@@ -24,6 +24,6 @@ COPY --from=builder /app/node_modules node_modules
 COPY --from=builder /app/dist/main.js dist/main.js
 COPY swagger.yaml swagger.yaml
 ARG environment=prod
-COPY env/.env.${environment} .env
+COPY env/env.${environment} .env
 EXPOSE 8000
 CMD ["node", "dist/main.js"]
