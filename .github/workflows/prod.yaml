@@ -1,0 +1,68 @@
+name: Deploy to Prod ECR
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check out the repo
+        uses: actions/checkout@v3
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.PROD_AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.PROD_AWS_SECRET_ACCESS_KEY }}
+          aws-region: ap-northeast-1
+
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
+
+      - name: Get version
+        id: get_version
+        run: echo "::set-output name=VERSION::$(jq -r '.version' package.json)"
+
+      - name: Print version
+        run: echo "Version is ${{ steps.get_version.outputs.VERSION }}"
+
+      - name: Build, tag, and push image to Amazon ECR
+        id: build-image
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: yueling-box-server
+          IMAGE_TAG: v${{ steps.get_version.outputs.VERSION }}
+        run: |
+          docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG --build-arg environment=prod .
+          docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
+          echo "::set-output name=image::$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG"
+
+      - name: Checkout k8s configs repo
+        uses: actions/checkout@v3
+        with:
+          repository: uture-ai/uture-ai-manifests
+          token: ${{ secrets.YLDM_GITHUB_ACCESS_TOKEN }}
+          path: uture-ai-manifests
+
+      - name: Update image version in deployment.yaml
+        env:
+          ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          ECR_REPOSITORY: yueling-box-server
+          IMAGE_TAG: v${{ steps.get_version.outputs.VERSION }}
+        run: |
+          sed -i "s|image: .*$|image: $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG|" uture-ai-manifests/microservices/api-uture-ai/overlays/prod/deployment.yaml
+
+      - name: Commit and push deployment.yaml
+        env:
+          IMAGE_TAG: v${{ steps.get_version.outputs.VERSION }}
+        run: |
+          cd uture-ai-manifests
+          git config --global user.name "Bot Powered by Evan Hu"
+          git config --global user.email "evan@uture.ai"
+          git commit -am "Update yueling-box-server prod image version to $IMAGE_TAG"
+          git push

@@ -1,0 +1,75 @@
+# https://taskfile.dev
+
+version: '3'
+
+tasks:
+  default:
+    cmds:
+      - echo {{.CLI_ARGS}}
+    silent: true
+  
+  init:
+    cmds:
+      -  npm install -g conventional-changelog-cli
+      -  npm install -g standard-version
+      -  npm install -g commitizen
+      -  cp env/env.local .env
+      -  npx prisma generate
+
+  nest:generate:
+    cmds:
+      - npx nest generate controller {{.CLI_ARGS}}
+      - npx nest generate service {{.CLI_ARGS}}
+      - npx nest generate module {{.CLI_ARGS}}
+      - npx nest generate class {{.CLI_ARGS}}
+
+  prisma:migrate:
+    cmds:
+      - npx prisma migrate dev --name init
+  
+  prisma:generate:
+    cmds:
+      - npx prisma generate
+  
+  prisma:studio:
+    cmds:
+      - npx prisma studio
+      - open http://127.0.0.1:5555
+  
+  prisma:pull:
+    cmds:
+      - npx prisma db pull
+  
+  prisma:push:
+    cmds:
+      - npx prisma db push
+  
+  prisma:format:
+    cmds:
+      - npx prisma format
+
+  prisma:fetch:
+    cmds:
+      - npx prisma db pull
+      - rimraf ./node_modules/.prisma/client
+      - npx prisma generate
+
+  changelog:
+    cmds:
+      - conventional-changelog -p angular -i CHANGELOG.md -s -r 0
+
+  release:
+    cmds:
+      - git fetch
+      - yarn release
+      - task changelog
+      - git add .
+      - git cz
+
+  commit:
+    cmds:
+      - git add .
+      - git cz
+      - git push
+
+

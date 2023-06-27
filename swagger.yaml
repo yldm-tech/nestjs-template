@@ -1,0 +1,33 @@
+openapi: 3.0.0
+paths:
+  /:
+    get:
+      operationId: AppController_getHello
+      summary: Create cat
+      parameters: []
+      responses:
+        '403':
+          description: Forbidden.
+      security:
+        - AccessToken: []
+        - Authorization: []
+info:
+  title: yueling-box-server
+  description: ''
+  version: 0.0.1
+  contact: {}
+tags: []
+servers: []
+components:
+  securitySchemes:
+    Authorization:
+      scheme: bearer
+      bearerFormat: JWT
+      type: http
+      in: header
+      name: Authorization
+    AccessToken:
+      type: apiKey
+      in: header
+      name: AccessToken
+  schemas: {}

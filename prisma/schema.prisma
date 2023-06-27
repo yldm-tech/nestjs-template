@@ -1,0 +1,22 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model yueling_todo {
+  id         Int      @id @default(autoincrement())
+  user_id    Int?
+  title      String
+  completed  Boolean  @default(false)
+  status     Int      @default(0)
+  created_at DateTime @default(now())
+  updated_at DateTime @default(now())
+}
+
+model yueling_user {
+  id Int @id @default(autoincrement())
+}
