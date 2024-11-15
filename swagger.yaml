@@ -3,14 +3,22 @@ paths:
   /:
     get:
       operationId: AppController_getHello
-      summary: Create cat
       parameters: []
       responses:
+        '200':
+          description: ''
+          content:
+            application/json:
+              schema:
+                type: string
         '403':
           description: Forbidden.
       security:
         - AccessToken: []
         - Authorization: []
+      summary: Create cat
+      tags:
+        - App
 info:
   title: yldm-box-server
   description: ''

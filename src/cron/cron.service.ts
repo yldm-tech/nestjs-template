@@ -1,4 +1,3 @@
-import { Injectable, Logger } from '@nestjs/common';
 import {
   Cron,
   CronExpression,
@@ -6,6 +5,8 @@ import {
   SchedulerRegistry,
   Timeout,
 } from '@nestjs/schedule';
+import { Injectable, Logger } from '@nestjs/common';
+
 import { CronJob } from 'cron';
 import { PrismaService } from '../prisma/prisma.service';
 
@@ -52,10 +53,10 @@ export class CronJobService {
   //   this.logger.debug('Called once after 5 seconds');
   // }
 
-  addCron(name: string, job: CronJob) {
-    this.schedulerRegistry.addCronJob(name, job);
-    this.logger.warn(`job ${name} added!`);
-  }
+  // addCron(name: string, job: CronJob) {
+  //   this.schedulerRegistry.addCronJob(name, job);
+  //   this.logger.warn(`job ${name} added!`);
+  // }
 
   /**
    * 删除指定名字的job
@@ -74,7 +75,7 @@ export class CronJobService {
     jobs.forEach((value, key, map) => {
       let next;
       try {
-        next = value.nextDates().toJSDate();
+        next = value.nextDates();
       } catch (e) {
         next = 'error: next fire date is in the past!';
       }

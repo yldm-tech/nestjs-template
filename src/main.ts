@@ -1,22 +1,23 @@
-import { AllExceptionsFilter } from './utils/interceptor/all-exception.interceptor';
+import * as compression from 'compression';
+import * as cookieParser from 'cookie-parser';
+import * as csurf from 'csurf';
+import * as fs from 'fs';
+import * as yaml from 'js-yaml';
+
+import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
+import { HttpAdapterHost, NestFactory } from '@nestjs/core';
 import {
   Logger,
-  ValidationPipe,
   VERSION_NEUTRAL,
+  ValidationPipe,
   VersioningType,
 } from '@nestjs/common';
-import { HttpAdapterHost, NestFactory } from '@nestjs/core';
-import { NestExpressApplication } from '@nestjs/platform-express';
-import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
-import * as cookieParser from 'cookie-parser';
-import * as fs from 'fs';
-import * as compression from 'compression';
-import * as yaml from 'js-yaml';
-import helmet from 'helmet';
-import * as csurf from 'csurf';
-import { AppModule } from './app.module';
-import { PrismaClientExceptionFilter } from './utils/filter/prisma-client-exception_filter';
 import { description, name, version } from './../package.json';
+
+import { AllExceptionsFilter } from './utils/interceptor/all-exception.interceptor';
+import { AppModule } from './app.module';
+import { NestExpressApplication } from '@nestjs/platform-express';
+import helmet from 'helmet';
 
 const logger = new Logger('main');
 
@@ -37,7 +38,6 @@ async function bootstrap() {
 
   // apply the exception filters to the entire application
   const { httpAdapter } = app.get(HttpAdapterHost);
-  app.useGlobalFilters(new PrismaClientExceptionFilter(httpAdapter));
 
   if (!process.env.local) {
     app.useGlobalFilters(new AllExceptionsFilter());
