@@ -46,7 +46,7 @@ env:
 jobs:
   setup:
     name: Setup
-    runs-on: ubuntu-latest
+    runs-on: yldm-backend-runners
 
     steps:
       - name: Setup
@@ -71,7 +71,7 @@ jobs:
 
   release:
     name: Release
-    runs-on: ubuntu-latest
+    runs-on: yldm-backend-runners
     needs: [setup]
 
     steps:
